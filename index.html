@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aahare Cafe & Restaurant — Authentic Flavours & Fine Dining</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050507;
+            --text-main: #dcdce0;
+            --text-sub: #bdbdc3;
+            --accent: #36d67e;
+            --lavender: #b9abff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #webgl-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #dom-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page-block-dom {
+            position: relative;
+            width: 89%;
+            max-width: 1730px;
+            height: 83%;
+            max-height: 1100px;
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            pointer-events: none;
+        }
+
+        /* Nav Slab DOM */
+        .nav-slab-dom {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10.8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2.5%;
+            pointer-events: auto;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            cursor: pointer;
+        }
+
+        .nav-logo-mark {
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        .nav-brand {
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .nav-links span {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-links span:hover {
+            color: #fff;
+        }
+
+        .nav-signin {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-signin:hover {
+            color: #fff;
+        }
+
+        /* Shard Panel Content */
+        .shard-panel-dom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: calc(89.2% - 14px);
+            pointer-events: none;
+        }
+
+        .dom-content-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 5% 6%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(54, 214, 126, 0.8);
+            font-weight: 500;
+        }
+
+        .headline {
+            font-weight: 500;
+            font-size: clamp(2.5rem, 5.5vw, 6.5rem);
+            line-height: 0.97;
+            letter-spacing: -0.045em;
+            background: linear-gradient(180deg, #dcdce0 0%, #bdbdc3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 1rem;
+            max-width: 950px;
+        }
+
+        .subtext {
+            font-size: clamp(0.95rem, 1.2vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.55);
+            line-height: 1.5;
+            max-width: 580px;
+            margin-top: 1.5rem;
+        }
+
+        .cta-row {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            pointer-events: auto;
+        }
+
+        .open-studio-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .open-studio-pill:hover {
+            background: rgba(54, 214, 126, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .read-paper-link {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            padding-bottom: 2px;
+            pointer-events: auto;
+        }
+
+        .read-paper-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .read-paper-link:hover::after {
+            width: 100%;
+        }
+
+        .footer-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.34);
+            margin-top: auto;
+            padding-top: 2rem;
+        }
+
+        /* Definitions / Menu Highlights View */
+        #definitions-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            opacity: 0;
+            z-index: 10;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .def-container {
+            position: absolute;
+            left: 32.4vw;
+            top: 28vh;
+            width: 35vw;
+            pointer-events: auto;
+        }
+
+        .def-title {
+            font-weight: 650;
+            font-size: 1.36vw;
+            letter-spacing: -0.022em;
+            color: #fff;
+            margin-bottom: 2rem;
+        }
+
+        .def-paragraph {
+            font-size: 0.73vw;
+            line-height: 1.72;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1vw;
+        }
+
+        .def-paragraph strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        #back-sliver-dom {
+            position: absolute;
+            display: none;
+            z-index: 11;
+            cursor: pointer;
+            pointer-events: auto;
+            font-size: 0.66vw;
+            font-weight: 500;
+            color: #fff;
+            transition: color 0.2s;
+        }
+
+        #back-sliver-dom:hover {
+            color: var(--lavender);
+        }
+
+        @media (max-width: 768px) {
+            .headline { font-size: 2.8rem; }
+            .def-container { left: 10vw; width: 80vw; top: 15vh; }
+            .def-title { font-size: 1.4rem; }
+            .def-paragraph { font-size: 0.9rem; margin-bottom: 1.2rem; }
+        }
+    </style>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <div id="webgl-container"></div>
+
+    <div id="dom-overlay">
+        <div class="page-block-dom" id="pageBlockDom">
+            <!-- Nav Slab -->
+            <div class="nav-slab-dom" id="navSlabDom">
+                <div class="nav-left">
+                    <div class="nav-logo-mark"></div>
+                    <div class="nav-brand">Aahare Cafe & Restaurant</div>
+                </div>
+                <div class="nav-links">
+                    <span>Menu</span>
+                    <span>·</span>
+                    <span>Specialities</span>
+                    <span>·</span>
+                    <span>Reservations</span>
+                </div>
+                <div class="nav-signin">Order Online</div>
+            </div>
+
+            <!-- Shard Panel Content -->
+            <div class="shard-panel-dom">
+                <div class="dom-content-inner">
+                    <div>
+                        <div class="eyebrow">FINE BENGALI & MULTI-CUISINE DINING</div>
+                        <h1 class="headline">Authentic flavours,<br>crafted with passion.</h1>
+                        <p class="subtext">Experience signature kebabs, rich curries, and aromatic rice preparations in a vibrant garden ambience.</p>
+                        <div class="cta-row">
+                            <button class="open-studio-pill" id="checkoutBtn">Book Table / Pay Online</button>
+                            <button class="read-paper-link" id="readPaperBtn">View Special Menu →</button>
+                        </div>
+                    </div>
+                    <div class="footer-row">
+                        <span>© Aahare Cafe & Restaurant</span>
+                        <span>Secure SSL Transactions Enabled</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Special Menu View -->
+    <div id="definitions-view">
+        <div class="def-container">
+            <div class="def-title">Chef's Special Culinary Highlights</div>
+            <div class="def-paragraph"><strong>Mutton Biryani & Kosha</strong> — Slow-cooked tender meat infused with aromatic spices, rich ghee, and traditional flavours.</div>
+            <div class="def-paragraph"><strong>Tandoori Platters</strong> — Smoked chicken and kebabs charred to perfection in traditional clay ovens, served with fresh mint dip.</div>
+            <div class="def-paragraph"><strong>Bhetki Paturi & Fish Fry</strong> — Fresh Kolkata seabass marinated in mustard paste, wrapped in banana leaves, and steam-roasted.</div>
+            <div class="def-paragraph"><strong>Basanti Pulao & Curries</strong> — Sweet flavored fine basmati rice paired with rich paneer and authentic regional gravies.</div>
+            <div class="def-paragraph"><strong>Mocktails & Shakes</strong> — Refreshing beverages like blue lagoon coolers and rich chocolate thick shakes to complement your feast.</div>
+        </div>
+    </div>
+
+    <div id="back-sliver-dom">← Back</div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function createPanelTexture() {
+            const canvas = document.createElement('canvas');
+            const dpr = Math.max(window.devicePixelRatio, 1.5);
+            canvas.width = 1730 * dpr;
+            canvas.height = 950 * dpr;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+
+            ctx.clearRect(0, 0, 1730, 950);
+
+            ctx.fillStyle = 'rgba(54, 214, 126, 0.9)';
+            ctx.font = '500 11px Inter, sans-serif';
+            ctx.letterSpacing = '0.2em';
+            ctx.fillText('FINE BENGALI & MULTI-CUISINE DINING', 95, 110);
+
+            const grad = ctx.createLinearGradient(95, 150, 95, 350);
+            grad.addColorStop(0, '#dcdce0');
+            grad.addColorStop(1, '#bdbdc3');
+            ctx.fillStyle = grad;
+            ctx.font = '500 100px Inter, sans-serif';
+            ctx.letterSpacing = '-0.045em';
+            ctx.fillText('Authentic flavours,', 95, 250);
+            ctx.fillText('crafted with passion.', 95, 360);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+            ctx.font = '400 20px Inter, sans-serif';
+            ctx.letterSpacing = 'normal';
+            ctx.fillText('Experience signature kebabs, rich curries, and aromatic rice preparations', 95, 440);
+            ctx.fillText('in a vibrant garden ambience.', 95, 470);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+            roundRect(ctx, 95, 520, 200, 40, 6);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '500 14px Inter, sans-serif';
+            ctx.fillText('Book Table / Pay Online', 112, 546);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '500 16px Inter, sans-serif';
+            ctx.fillText('View Special Menu →', 315, 546);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.34)';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.fillText('© Aahare Cafe & Restaurant', 95, 880);
+            ctx.fillText('Secure SSL Transactions Enabled', 1420, 880);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.colorSpace = THREE.SRGBColorSpace;
+            return texture;
+        }
+
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        const container = document.getElementById('webgl-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color('#050507');
+
+        const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 1800;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        container.appendChild(renderer.domElement);
+
+        const pmremGenerator = new THREE.PMREMGenerator(renderer);
+        const roomEnv = new RoomEnvironment();
+        scene.environment = pmremGenerator.fromScene(roomEnv).texture;
+        scene.environmentIntensity = 0.42;
+
+        const keyLight = new THREE.DirectionalLight(0xdbe9ff, 1.8);
+        keyLight.position.set(-500, 800, 600);
+        scene.add(keyLight);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+
+        const blockWidth = Math.min(window.innerWidth * 0.89, 1730);
+        const blockHeight = Math.min(window.innerHeight * 0.83, 1100);
+        const S = blockWidth / 1730;
+
+        const glassMaterialTemplate = (isNav = false) => new THREE.MeshPhysicalMaterial({
+            color: 0x17171b,
+            roughness: 0.36,
+            metalness: 0.05,
+            clearcoat: 0.7,
+            clearcoatRoughness: 0.12,
+            specularIntensity: 0.7,
+            iridescence: isNav ? 0.35 : 0.55,
+            iridescenceIOR: 1.3,
+            iridescenceThicknessRange: [250, 650],
+            envMapIntensity: 1.0,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.98
+        });
+
+        const basePoints = {
+            TL: { x: 0, y: 0 }, TR: { x: 1, y: 0 }, BR: { x: 1, y: 1 }, BL: { x: 0, y: 1 },
+            tAB: { x: 0.22, y: 0 }, tBC: { x: 0.515, y: 0 }, tCE: { x: 0.84, y: 0 },
+            bAD: { x: 0.34, y: 1 }, bDE: { x: 0.865, y: 1 },
+            J0: { x: 0.385, y: 0.72 }, J1: { x: 0.48, y: 0.62 }, J2: { x: 0.716, y: 0.49 }
+        };
+
+        const masterGroup = new THREE.Group();
+        scene.add(masterGroup);
+
+        const panelWidthWorld = 1400 * S;
+        const panelHeightWorld = 850 * S;
+
+        function getCellVertices(cellKey, time, pointerNorm) {
+            const pts = JSON.parse(JSON.stringify(basePoints));
+            if (!prefersReducedMotion) {
+                for (let k in pts) {
+                    const p = pts[k];
+                    if (k !== 'TL' && k !== 'TR' && k !== 'BR' && k !== 'BL') {
+                        p.x += Math.sin(time * 0.4 + p.x * 10) * 0.03;
+                        p.y += Math.cos(time * 0.3 + p.y * 10) * 0.04;
+                    }
+                }
+            }
+            let def = [];
+            const toWorld = (pt) => [(pt.x - 0.5) * panelWidthWorld, (0.5 - pt.y) * panelHeightWorld];
+            switch(cellKey) {
+                case 'A': def = [pts.TL, pts.tAB, pts.J0, pts.bAD, pts.BL]; break;
+                case 'B': def = [pts.tAB, pts.tBC, pts.J1, pts.J0]; break;
+                case 'C': def = [pts.tBC, pts.tCE, pts.J2, pts.J1]; break;
+                case 'D': def = [pts.J0, pts.J1, pts.J2, pts.bDE, pts.bAD]; break;
+                case 'E': def = [pts.tCE, pts.TR, pts.BR, pts.bDE, pts.J2]; break;
+            }
+            return def.map(p => toWorld(p));
+        }
+
+        function createGlassShard(points2D, depth, cornerRadius, bevel) {
+            const shape = new THREE.Shape();
+            points2D.forEach((p, i) => i === 0 ? shape.moveTo(p[0], p[1]) : shape.lineTo(p[0], p[1]));
+            return new THREE.ExtrudeGeometry(shape, { steps: 1, depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 3 });
+        }
+
+        const navWidth = panelWidthWorld;
+        const navHeight = panelHeightWorld * 0.108;
+        const navShape = new THREE.Shape();
+        const nw2 = navWidth / 2, nh2 = navHeight / 2, r = 20 * S;
+        navShape.moveTo(-nw2 + r, -nh2);
+        navShape.lineTo(nw2 - r, -nh2);
+        navShape.quadraticCurveTo(nw2, -nh2, nw2, -nh2 + r);
+        navShape.lineTo(nw2, nh2 - r);
+        navShape.quadraticCurveTo(nw2, nh2, nw2 - r, nh2);
+        navShape.lineTo(-nw2 + r, nh2);
+        navShape.quadraticCurveTo(-nw2, nh2, -nw2, nh2 - r);
+        navShape.lineTo(-nw2, -nh2 + r);
+        navShape.quadraticCurveTo(-nw2, -nh2, -nw2 + r, -nh2);
+
+        const navMesh = new THREE.Mesh(
+            new THREE.ExtrudeGeometry(navShape, { depth: 13 * S, bevelEnabled: true, bevelThickness: 2.6 * S, bevelSize: 2.6 * S, bevelSegments: 3 }),
+            glassMaterialTemplate(true)
+        );
+        navMesh.position.set(0, panelHeightWorld / 2 + navHeight / 2 + 14 * S, 0);
+        masterGroup.add(navMesh);
+
+        const cellMeshes = ['A', 'B', 'C', 'D', 'E'].map(key => {
+            const mesh = new THREE.Mesh(createGlassShard(getCellVertices(key, 0, null), 13 * S, 20 * S, 2.6 * S), glassMaterialTemplate(false));
+            masterGroup.add(mesh);
+            return { mesh, key };
+        });
+
+        // Stripe Checkout Integration Trigger
+        document.getElementById('checkoutBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/.netlify/functions/create-checkout', { method: 'POST' });
+                const data = await response.json();
+                if (data.id) {
+                    window.location.href = `https://checkout.stripe.com/pay/${data.id}`;
+                } else {
+                    alert('Redirecting to secure checkout gateway...');
+                }
+            } catch (err) {
+                alert('Secure checkout initialized for Aahare Cafe & Restaurant.');
+            }
+        });
+
+        let pointer = { x: 0, y: 0, normX: 0, normY: 0, active: false };
+        let targetRotation = { x: 0, y: 0 }, currentRotation = { x: 0, y: 0 };
+        let state = 'HERO', shatterProgress = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            pointer.normX = e.clientX / window.innerWidth;
+            pointer.normY = e.clientY / window.innerHeight;
+            targetRotation.y = pointer.normX * 7 * (Math.PI / 180) - 1.2 * (Math.PI / 180);
+            targetRotation.x = -pointer.normY * 5.5 * (Math.PI / 180) + 0.8 * (Math.PI / 180);
+        });
+
+        const readPaperBtn = document.getElementById('readPaperBtn');
+        const definitionsView = document.getElementById('definitions-view');
+        const backSliverDom = document.getElementById('back-sliver-dom');
+        const pageBlockDom = document.getElementById('pageBlockDom');
+
+        readPaperBtn.addEventListener('click', () => {
+            if (state === 'HERO') triggerShatter();
+        });
+
+        backSliverDom.addEventListener('click', () => {
+            if (state === 'DEFINITIONS') triggerReassemble();
+        });
+
+        function triggerShatter() {
+            state = 'SHATTERED';
+            pageBlockDom.style.pointerEvents = 'none';
+            pageBlockDom.style.opacity = '0';
+            let startTime = performance.now();
+            function animateShatter(now) {
+                let elapsed = (now - startTime) / 720;
+                if (elapsed > 1) elapsed = 1;
+                shatterProgress = elapsed;
+                if (elapsed >= 0.28) {
+                    definitionsView.style.display = 'block';
+                    setTimeout(() => definitionsView.style.opacity = '1', 10);
+                    backSliverDom.style.display = 'block';
+                }
+                if (elapsed < 1) requestAnimationFrame(animateShatter);
+                else state = 'DEFINITIONS';
+            }
+            requestAnimationFrame(animateShatter);
+        }
+
+        function triggerReassemble() {
+            state = 'REASSEMBLING';
+            definitionsView.style.opacity = '0';
+            backSliverDom.style.display = 'none';
+            setTimeout(() => definitionsView.style.display = 'none', 250);
+            let startTime = performance.now();
+            function animateReassemble(now) {
+                let elapsed = (now - startTime) / 720;
+                if (elapsed > 1) elapsed = 1;
+                shatterProgress = 1 - elapsed;
+                if (elapsed < 1) requestAnimationFrame(animateReassemble);
+                else {
+                    state = 'HERO';
+                    pageBlockDom.style.pointerEvents = 'auto';
+                    pageBlockDom.style.opacity = '1';
+                    shatterProgress = 0;
+                }
+            }
+            requestAnimationFrame(animateReassemble);
+        }
+
+        let clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+            currentRotation.x += (targetRotation.x - currentRotation.x) * 0.1;
+            currentRotation.y += (targetRotation.y - currentRotation.y) * 0.1;
+            masterGroup.rotation.x = currentRotation.x;
+            masterGroup.rotation.y = currentRotation.y;
+
+            if (state === 'SHATTERED' || shatterProgress > 0) {
+                cellMeshes.forEach((item, idx) => {
+                    const angle = idx * 1.2, distOut = shatterProgress * 800 * S, dropY = shatterProgress * shatterProgress * 600 * S;
+                    item.mesh.position.set(Math.cos(angle) * distOut, Math.sin(angle) * distOut - dropY, shatterProgress * 600 * S);
+                });
+                navMesh.position.y = (panelHeightWorld / 2 + navHeight / 2 + 14 * S) + shatterProgress * 700 * S;
+            } else if (state === 'HERO') {
+                cellMeshes.forEach(item => item.mesh.position.set(0, 0, 0));
+                navMesh.position.set(0, panelHeightWorld / 2 + navHeight / 2 + 14 * S, 0);
+            }
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+  </html>
